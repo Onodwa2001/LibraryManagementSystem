@@ -1,9 +1,11 @@
 package model;
 
+import domain.Book;
 import domain.Loan;
 import domain.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class LoanDAO {
@@ -205,6 +207,49 @@ public class LoanDAO {
         return null;
     }
 
+    public static ArrayList<Loan> getLoans() {
+        ArrayList<Loan> loans = new ArrayList<>();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet rs = null;
+
+        try {
+
+            conn = DriverManager.getConnection(CONNECTION, USERNAME, PASSWORD);
+            statement = conn.createStatement();
+            rs = statement.executeQuery("SELECT * FROM loan");
+
+            Loan loan;
+
+            if (rs != null) {
+
+                while (rs.next()) {
+                    String studentID = rs.getString("student_id");
+                    String isbn = rs.getString("isbn");
+                    double amountOwing = rs.getDouble("amount_owing");
+
+                    loan = new Loan(studentID, isbn, amountOwing);
+                    loans.add(loan);
+                }
+
+                return loans;
+            }
+
+
+        } catch (SQLException sql) {
+            System.out.println("Error while fetching loans: " + sql.getMessage());
+            sql.printStackTrace();
+        }
+
+        return null;
+    }
 
 
 }

@@ -12,19 +12,26 @@ import model.UserDAO;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class Main {
 
     static String error;
 
+    public static void updateAmounts() {
+        ArrayList<Loan> loans = LoanDAO.getLoans();
+
+        assert loans != null;
+
+        for (Loan loan : loans) {
+            LoanDAO.setAmountOwing(loan);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
+
+        updateAmounts();
 
 //        UserDAO.
 
